@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from django_assessment.models import (
     Assessment,
+    Option,
     OptionSet,
     Question,
     QuestionType,
@@ -31,6 +32,14 @@ class OptionSetFactory(factory.DjangoModelFactory):
         model = OptionSet
 
     name = factory.Sequence(lambda n: f'Option Set-{n}')
+
+
+class OptionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Option
+
+    text = factory.Sequence(lambda n: f'Option-{n}')
+    value = 1
 
 
 class QuestionFactory(factory.DjangoModelFactory):

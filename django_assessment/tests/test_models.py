@@ -1,6 +1,5 @@
 from django_assessment.tests import factories as f
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test.utils import override_settings
 
 
 class TestAssessment:
@@ -35,23 +34,11 @@ class TestQuestion:
 
         assert str(q) == 'What does Django mean?'
 
-    def test_is_image(self, db):
-        q = f.QuestionFactory.create(
-            assessment__title='Test Assessment',
-            name='Selfie Upload',
-            type__slug='image'
-        )
+    def test_is_image(self, img_question):
+        assert img_question.is_image
 
-        assert q.is_image
-
-    def test_is_file(self, db):
-        q = f.QuestionFactory.create(
-            assessment__title='Test Assessment',
-            name='Doc Upload',
-            type__slug='file'
-        )
-
-        assert q.is_file
+    def test_is_file(self, doc_question):
+        assert doc_question.is_file
 
 
 class TestResponse:
