@@ -54,12 +54,14 @@ class AssessmentFormFactory(forms.Form):
 
         if q_type == QuestionType.IMAGE_INPUT:
             self.fields[f'{self.question.varname}'] = forms.ImageField(
+                widget=forms.ClearableFileInput(attrs=attrs),
                 required=self.question.is_required,
                 label=self.question.name
             )
 
         if q_type == QuestionType.FILE_INPUT:
             self.fields[f'{self.question.varname}'] = forms.FileField(
+                widget=forms.ClearableFileInput(attrs=attrs),
                 required=self.question.is_required,
                 label=self.question.name
             )
@@ -83,6 +85,12 @@ class ResponseForm:
     @property
     def errors(self):
         return [f.errors for f in self.forms]
+
+    def has_error(self):
+        for f in self.forms:
+            if f.errors:
+                return True
+        return False
 
     @transaction.atomic
     def save(self, user):
