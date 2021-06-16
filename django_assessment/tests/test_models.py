@@ -16,7 +16,6 @@ class TestQuestionType:
         assert str(qt) == 'Checkbox'
 
 
-
 class TestOptionSet:
     def test_str(self):
         os = f.OptionSetFactory.build(name='Yes or No')

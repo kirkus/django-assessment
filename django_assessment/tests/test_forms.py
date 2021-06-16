@@ -3,7 +3,8 @@ from django.utils.six import BytesIO
 from PIL import Image
 import pytest
 
-from django_assessment.forms import AssessmentFormFactory
+from django_assessment.forms import AssessmentFormFactory, ResponseForm
+from django_assessment.models import Response
 from django_assessment.tests import factories as f
 
 
@@ -76,3 +77,28 @@ class TestAssessmentFileFormFactory:
         form = AssessmentFormFactory({}, v, question=doc_question)
 
         assert form.is_valid(), form.errors
+
+
+class TestResponseForm:
+    def test_form_save(self, db):
+        user = f.UserFactory.create()
+        assessment = f.AssessmentFactory.create()
+        f.QuestionFactory.create(
+            assessment=assessment,
+            name='Test Question',
+            type__slug='short-text',
+            varname='question 1'
+        )
+        data = {
+            'question 1': 'answer 1',
+        }
+        form = ResponseForm(data=data, assessment=assessment, user=user)
+
+        assert form.is_valid(), form.errors
+
+        form.save()
+        response = Response.objects.first()
+
+        assert response.answer == 'answer 1'
+        assert response.user == user
+        assert response.assessment == assessment
