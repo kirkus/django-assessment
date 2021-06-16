@@ -70,11 +70,12 @@ class AssessmentFormFactory(forms.Form):
 class ResponseForm:
     def __init__(self, data=None, files=None, **kwargs):
         self.assessment = kwargs.pop('assessment')
+        self.user = kwargs.pop('user')
         self.forms = [
             AssessmentFormFactory(
                 data=data,
                 files=files,
-                initial=kwargs['initial'],
+                initial=kwargs.get('initial'),
                 question=q
             ) for q in self.assessment.questions.all()
         ]
@@ -93,11 +94,11 @@ class ResponseForm:
         return False
 
     @transaction.atomic
-    def save(self, user):
+    def save(self):
         for form in self.forms:
             data = form.cleaned_data[form.question.varname]
             Response.objects.update_or_create(
-                user=user,
+                user=self.user,
                 assessment=self.assessment,
                 question=form.question,
                 defaults={
