@@ -17,10 +17,15 @@ class AssessmentFormFactory(forms.Form):
 
         choices = []
         attrs = {
-            'class': 'form-control'
+            'class': 'form-control',
+            'placeholder': self.question.placeholder,
+            'required': self.question.is_required
         }
-        if self.question.is_required:
-            attrs['required'] = True
+        field_kwargs = {
+            'required': self.question.is_required,
+            'label': self.question.name,
+            'help_text': self.question.help_text,
+        }
 
         q_type = self.question.type.slug
         if q_type in [CHECKBOX, DROPDOWN, RADIO_BUTTON]:
@@ -31,8 +36,7 @@ class AssessmentFormFactory(forms.Form):
             self.fields[f'{self.question.varname}'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple(),
                 choices=choices,
-                required=self.question.is_required,
-                label=self.question.name
+                **field_kwargs
             )
 
         if q_type in [DROPDOWN, RADIO_BUTTON]:
@@ -40,30 +44,26 @@ class AssessmentFormFactory(forms.Form):
             self.fields[f'{self.question.varname}'] = forms.ChoiceField(
                 widget=widget(attrs=attrs),
                 choices=tuple(choices),
-                required=self.question.is_required,
-                label=self.question.name
+                **field_kwargs
             )
 
         if q_type in [SHORT_TEXT, LONG_TEXT]:
             widget = forms.Textarea if q_type == LONG_TEXT else forms.TextInput
             self.fields[f'{self.question.varname}'] = forms.CharField(
                 widget=widget(attrs=attrs),
-                required=self.question.is_required,
-                label=self.question.name
+                **field_kwargs
             )
 
         if q_type == QuestionType.IMAGE_INPUT:
             self.fields[f'{self.question.varname}'] = forms.ImageField(
                 widget=forms.ClearableFileInput(attrs=attrs),
-                required=self.question.is_required,
-                label=self.question.name
+                **field_kwargs
             )
 
         if q_type == QuestionType.FILE_INPUT:
             self.fields[f'{self.question.varname}'] = forms.FileField(
                 widget=forms.ClearableFileInput(attrs=attrs),
-                required=self.question.is_required,
-                label=self.question.name
+                **field_kwargs
             )
 
 

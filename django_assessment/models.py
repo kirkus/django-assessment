@@ -60,6 +60,8 @@ class Question(models.Model):
         default=False,
         help_text='Check this if question is required.'
     )
+    placeholder = models.CharField(max_length=128, blank=True)
+    help_text = models.CharField(max_length=256, blank=True)
     order = models.IntegerField(default=0)
 
     class Meta:
