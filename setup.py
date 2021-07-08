@@ -19,7 +19,7 @@ setup(
     url='https://github.com/kirkus/django-assessment/',
     license='',
     packages=find_packages(),
-    install_requires=['Django==1.8.11'],
+    install_requires=['Django>=1.8.11'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

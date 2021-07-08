@@ -43,14 +43,19 @@ class OptionSet(models.Model):
 
 
 class Question(models.Model):
-    assessment = models.ForeignKey(Assessment, related_name='questions')
+    assessment = models.ForeignKey(
+        Assessment,
+        on_delete=models.CASCADE,
+        related_name='questions'
+    )
     name = models.TextField()
-    type = models.ForeignKey(QuestionType)
+    type = models.ForeignKey(QuestionType, on_delete=models.CASCADE)
     varname = models.CharField(
         max_length=64,
         help_text="The name to use in order to build the form field."
     )
-    option_set = models.ForeignKey(OptionSet, blank=True, null=True)
+    option_set = models.ForeignKey(
+        OptionSet, on_delete=models.SET_NULL, blank=True, null=True)
     is_required = models.BooleanField(
         default=False,
         help_text='Check this if question is required.'
@@ -74,7 +79,11 @@ class Question(models.Model):
 
 
 class Option(models.Model):
-    option_set = models.ForeignKey(OptionSet, related_name='options')
+    option_set = models.ForeignKey(
+        OptionSet,
+        on_delete=models.CASCADE,
+        related_name='options'
+    )
     text = models.TextField(help_text='"The text of the option.')
     value = models.IntegerField(help_text='"The value of the option.')
     order = models.IntegerField(default=0)
@@ -84,9 +93,13 @@ class Option(models.Model):
 
 
 class Response(models.Model):
-    question = models.ForeignKey(Question)
-    assessment = models.ForeignKey(Assessment, related_name='responses')
-    user = models.ForeignKey(User)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(
+        Assessment,
+        on_delete=models.CASCADE,
+        related_name='responses'
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     answer = models.TextField(blank=True)
     image = models.ImageField(blank=True, upload_to=res_upload_to)
     file = models.FileField(blank=True, upload_to=res_upload_to)
