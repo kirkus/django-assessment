@@ -45,7 +45,7 @@ class AssessmentAdmin(admin.ModelAdmin):
 
 @admin.register(Response)
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('user', 'question_name', 'answer', 'assessment')
+    list_display = ('user', 'key', 'question_name', 'answer', 'assessment')
     list_filter = ('assessment',)
     model = Response
 
