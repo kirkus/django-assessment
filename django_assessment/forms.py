@@ -70,7 +70,8 @@ class AssessmentFormFactory(forms.Form):
 class ResponseForm:
     def __init__(self, data=None, files=None, **kwargs):
         self.assessment = kwargs.pop('assessment')
-        self.user = kwargs.pop('user')
+        self.user = kwargs.pop('user', None)
+        self.key = kwargs.pop('key', '')
         self.forms = [
             AssessmentFormFactory(
                 data=data,
@@ -99,6 +100,7 @@ class ResponseForm:
             data = form.cleaned_data[form.question.varname]
             Response.objects.update_or_create(
                 user=self.user,
+                key=self.key,
                 assessment=self.assessment,
                 question=form.question,
                 defaults={

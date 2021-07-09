@@ -12,12 +12,14 @@ class Assessment(models.Model):
     def __str__(self):
         return self.title
 
-    def data(self, user):
-        d = {
-            r.question.varname: r.get_answer() for r in self.responses.filter(user=user)
-        }
+    def _get_data(self, qs):
+        return {r.question.varname: r.get_answer() for r in qs}
 
-        return d
+    def get_data_by_user(self, user):
+        return self._get_data(self.responses.filter(user=user))
+
+    def get_data_by_key(self, key):
+        return self._get_data(self.responses.filter(key=key))
 
 
 class QuestionType(models.Model):
@@ -101,7 +103,8 @@ class Response(models.Model):
         on_delete=models.CASCADE,
         related_name='responses'
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    key = models.CharField(max_length=128, db_index=True, blank=True)
     answer = models.TextField(blank=True)
     image = models.ImageField(blank=True, upload_to=res_upload_to)
     file = models.FileField(blank=True, upload_to=res_upload_to)
