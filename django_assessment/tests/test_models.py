@@ -8,6 +8,42 @@ class TestAssessment:
 
         assert str(a) == 'First Assessment'
 
+    def test_get_data_by_user(self, db):
+        a = f.AssessmentFactory.create()
+        user = f.UserFactory.create()
+        q = f.QuestionFactory.create(
+            assessment=a,
+            name='Test Question',
+            type__slug='short-text',
+            varname='question_by_user',
+        )
+        r = f.ResponseFactory.create(
+            question=q,
+            assessment=a,
+            user=user,
+            answer='Test Answer'
+        )
+
+        assert a.get_data_by_user(user) == {'question_by_user': 'Test Answer'}
+
+    def test_get_data_by_key(self, db):
+        a = f.AssessmentFactory.create()
+        user = f.UserFactory.create()
+        key = f'my_key_{user.id}'
+        q = f.QuestionFactory.create(
+            assessment=a,
+            name='Test Question',
+            type__slug='short-text',
+            varname='question_by_key',
+        )
+        r = f.ResponseFactory.create(
+            question=q,
+            assessment=a,
+            key=key,
+            answer='Test Answer'
+        )
+        assert a.get_data_by_key(key) == {'question_by_key': 'Test Answer'}
+
 
 class TestQuestionType:
     def test_str(self):

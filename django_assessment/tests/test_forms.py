@@ -95,6 +95,7 @@ class TestResponseForm:
         form = ResponseForm(data=data, assessment=assessment, user=user)
 
         assert form.is_valid(), form.errors
+        assert not form.has_error()
 
         form.save()
         response = Response.objects.first()
@@ -102,3 +103,33 @@ class TestResponseForm:
         assert response.answer == 'answer 1'
         assert response.user == user
         assert response.assessment == assessment
+
+    def test_form_errors(self, db):
+        user = f.UserFactory.create()
+        assessment = f.AssessmentFactory.create()
+        f.QuestionFactory.create(
+            assessment=assessment,
+            name='Test Question',
+            type__slug='short-text',
+            varname='question 1',
+            is_required=True,
+        )
+        form = ResponseForm(data={}, assessment=assessment, user=user)
+
+        assert not form.is_valid()
+        assert form.errors == [{'question 1': ['This field is required.']}]
+
+    def test_form_has_error(self, db):
+        user = f.UserFactory.create()
+        assessment = f.AssessmentFactory.create()
+        f.QuestionFactory.create(
+            assessment=assessment,
+            name='Test Question',
+            type__slug='short-text',
+            varname='question 1',
+            is_required=True,
+        )
+        form = ResponseForm(data={}, assessment=assessment, user=user)
+
+        assert form.has_error()
+        assert form.errors == [{'question 1': ['This field is required.']}]
