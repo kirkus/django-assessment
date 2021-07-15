@@ -13,7 +13,15 @@ class Assessment(models.Model):
         return self.title
 
     def _get_data(self, qs):
-        return {r.question.varname: r.get_answer() for r in qs}
+        # TODO: Don't hardcode checkbox
+        # TODO: Test checkbox case
+        data = {}
+        for resp in qs:
+            answer = resp.get_answer()
+            if resp.question.type.slug == "checkbox" and answer:
+                answer = eval(answer)
+            data[resp.question.varname] = answer
+        return data
 
     def get_data_by_user(self, user):
         return self._get_data(self.responses.filter(user=user))
