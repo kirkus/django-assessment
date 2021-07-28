@@ -114,8 +114,8 @@ class Response(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     key = models.CharField(max_length=128, db_index=True, blank=True)
     answer = models.TextField(blank=True)
-    image = models.ImageField(blank=True, upload_to=res_upload_to)
-    file = models.FileField(blank=True, upload_to=res_upload_to)
+    image = models.ImageField(blank=True, upload_to=res_upload_to, max_length=255)
+    file = models.FileField(blank=True, upload_to=res_upload_to, max_length=255)
 
     def get_answer(self):
         if self.question.is_image:
