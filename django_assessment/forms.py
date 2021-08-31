@@ -29,6 +29,8 @@ class AssessmentFormFactory(forms.Form):
 
         q_type = self.question.type.slug
         if q_type in [CHECKBOX, DROPDOWN, RADIO_BUTTON]:
+            if q_type == DROPDOWN:
+                choices.append(("", "---------------"))
             for option in self.question.option_set.options.all():
                 choices.append(tuple([option.value, option.text]))
 
