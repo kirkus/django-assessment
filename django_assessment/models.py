@@ -111,7 +111,7 @@ class Response(models.Model):
         on_delete=models.CASCADE,
         related_name='responses'
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     key = models.CharField(max_length=128, db_index=True, blank=True)
     answer = models.TextField(blank=True)
     image = models.ImageField(blank=True, upload_to=res_upload_to, max_length=255)
