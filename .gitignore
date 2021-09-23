@@ -3,6 +3,8 @@
 *.swp
 .cache
 .idea
-
+.coverage
+django_assessment.db
 __pycache__
 /.pytest_cache/
+htmlcov
