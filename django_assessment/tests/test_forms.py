@@ -1,5 +1,6 @@
+from io import BytesIO
+
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.utils.six import BytesIO
 from PIL import Image
 import pytest
 
@@ -67,7 +68,7 @@ class TestAssessmentFileFormFactory:
 
     def test_image_form_valid(self, img_question):
         img = self._create_image()
-        v = {'django_question': SimpleUploadedFile('image_file', img.getvalue())}
+        v = {'django_question': SimpleUploadedFile('image_file.png', img.getvalue())}
         form = AssessmentFormFactory({}, v, question=img_question)
 
         assert form.is_valid(), form.errors
