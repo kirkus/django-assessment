@@ -11,7 +11,7 @@ from django_assessment.models import (
 )
 
 
-class AssessmentFactory(factory.DjangoModelFactory):
+class AssessmentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Assessment
 
@@ -19,7 +19,7 @@ class AssessmentFactory(factory.DjangoModelFactory):
     slug = factory.Sequence(lambda n: f'title-slug-{n}')
 
 
-class QuestionTypeFactory(factory.DjangoModelFactory):
+class QuestionTypeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = QuestionType
 
@@ -27,14 +27,14 @@ class QuestionTypeFactory(factory.DjangoModelFactory):
     slug = factory.Sequence(lambda n: f'question-type-{n}')
 
 
-class OptionSetFactory(factory.DjangoModelFactory):
+class OptionSetFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = OptionSet
 
     name = factory.Sequence(lambda n: f'Option Set-{n}')
 
 
-class OptionFactory(factory.DjangoModelFactory):
+class OptionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Option
 
@@ -42,7 +42,7 @@ class OptionFactory(factory.DjangoModelFactory):
     value = 1
 
 
-class QuestionFactory(factory.DjangoModelFactory):
+class QuestionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Question
 
@@ -52,7 +52,7 @@ class QuestionFactory(factory.DjangoModelFactory):
     varname = factory.Sequence(lambda n: f'question_{n}')
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
@@ -61,7 +61,7 @@ class UserFactory(factory.DjangoModelFactory):
     password = 'sekret'
 
 
-class ResponseFactory(factory.DjangoModelFactory):
+class ResponseFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Response
 

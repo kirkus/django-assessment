@@ -8,3 +8,5 @@ django_assessment.db
 __pycache__
 /.pytest_cache/
 htmlcov
+/django_assessment.egg-info/
+/.tox/
