@@ -13,12 +13,11 @@ class Assessment(models.Model):
         return self.title
 
     def _get_data(self, qs):
-        # TODO: Don't hardcode checkbox
         # TODO: Test checkbox case
         data = {}
         for resp in qs:
             answer = resp.get_answer()
-            if resp.question.type.slug == "checkbox" and answer:
+            if resp.question.type.slug == QuestionType.CHECKBOX and answer:
                 answer = eval(answer)
             data[resp.question.varname] = answer
         return data
@@ -31,8 +30,13 @@ class Assessment(models.Model):
 
 
 class QuestionType(models.Model):
+    CHECKBOX = 'checkbox'
+    DROPDOWN = 'dropdown'
     FILE_INPUT = 'file'
     IMAGE_INPUT = 'image'
+    LONG_TEXT = 'long-text'
+    RADIO_BUTTON = 'radio-button'
+    SHORT_TEXT = 'short-text'
 
     name = models.CharField(max_length=64, unique=True)
     slug = models.SlugField(unique=True)

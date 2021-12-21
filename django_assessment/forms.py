@@ -1,13 +1,7 @@
 from django import forms
 from django.db import transaction
 
-from .models import QuestionType, Response
-
-CHECKBOX = 'checkbox'
-DROPDOWN = 'dropdown'
-LONG_TEXT = 'long-text'
-RADIO_BUTTON = 'radio-button'
-SHORT_TEXT = 'short-text'
+from .models import QuestionType as Q_Type, Response
 
 
 class AssessmentFormFactory(forms.Form):
@@ -28,41 +22,41 @@ class AssessmentFormFactory(forms.Form):
         }
 
         q_type = self.question.type.slug
-        if q_type in [CHECKBOX, DROPDOWN, RADIO_BUTTON]:
-            if q_type == DROPDOWN and not self.question.is_required:
+        if q_type in [Q_Type.CHECKBOX, Q_Type.DROPDOWN, Q_Type.RADIO_BUTTON]:
+            if q_type == Q_Type.DROPDOWN and not self.question.is_required:
                 choices.append(("", "---------------"))
             for option in self.question.option_set.options.all():
                 choices.append(tuple([option.value, option.text]))
 
-        if q_type == CHECKBOX:
+        if q_type == Q_Type.CHECKBOX:
             self.fields[f'{self.question.varname}'] = forms.MultipleChoiceField(
                 widget=forms.CheckboxSelectMultiple(),
                 choices=choices,
                 **field_kwargs
             )
 
-        if q_type in [DROPDOWN, RADIO_BUTTON]:
-            widget = forms.Select if q_type == DROPDOWN else forms.RadioSelect
+        if q_type in [Q_Type.DROPDOWN, Q_Type.RADIO_BUTTON]:
+            widget = forms.Select if q_type == Q_Type.DROPDOWN else forms.RadioSelect
             self.fields[f'{self.question.varname}'] = forms.ChoiceField(
                 widget=widget(attrs=attrs),
                 choices=tuple(choices),
                 **field_kwargs
             )
 
-        if q_type in [SHORT_TEXT, LONG_TEXT]:
-            widget = forms.Textarea if q_type == LONG_TEXT else forms.TextInput
+        if q_type in [Q_Type.SHORT_TEXT, Q_Type.LONG_TEXT]:
+            widget = forms.Textarea if q_type == Q_Type.LONG_TEXT else forms.TextInput
             self.fields[f'{self.question.varname}'] = forms.CharField(
                 widget=widget(attrs=attrs),
                 **field_kwargs
             )
 
-        if q_type == QuestionType.IMAGE_INPUT:
+        if q_type == Q_Type.IMAGE_INPUT:
             self.fields[f'{self.question.varname}'] = forms.ImageField(
                 widget=forms.ClearableFileInput(attrs=attrs),
                 **field_kwargs
             )
 
-        if q_type == QuestionType.FILE_INPUT:
+        if q_type == Q_Type.FILE_INPUT:
             self.fields[f'{self.question.varname}'] = forms.FileField(
                 widget=forms.ClearableFileInput(attrs=attrs),
                 **field_kwargs

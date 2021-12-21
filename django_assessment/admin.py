@@ -48,6 +48,7 @@ class ResponseAdmin(admin.ModelAdmin):
     list_display = ('user', 'key', 'question_name', 'answer', 'assessment')
     list_filter = ('assessment',)
     model = Response
+    raw_id_fields = ('user',)
 
     def question_name(self, obj):
         return obj.question.name[:100]
