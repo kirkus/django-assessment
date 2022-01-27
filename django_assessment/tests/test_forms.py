@@ -42,19 +42,12 @@ class TestAssessmentTextFormFactory:
 
         assert form.is_valid(), form.errors
 
-    def test_form_errors(self, db):
-        q = f.QuestionFactory.create(
-            assessment__title='Test Assessment',
-            name='What does Django mean?',
-            type__slug='long-text',
-            varname='django_question',
-            is_required=True
-        )
-        form = AssessmentFormFactory({}, question=q)
+    def test_form_errors(self, question):
+        form = AssessmentFormFactory({}, question=question)
 
         assert not form.is_valid()
         assert form.errors == {
-            'django_question': ['This field is required.']
+            'test_question': ['This field is required.']
         }
 
 
@@ -81,17 +74,11 @@ class TestAssessmentFileFormFactory:
 
 
 class TestResponseForm:
-    def test_form_save(self, db):
+    def test_form_save(self, question):
         user = f.UserFactory.create()
-        assessment = f.AssessmentFactory.create()
-        f.QuestionFactory.create(
-            assessment=assessment,
-            name='Test Question',
-            type__slug='short-text',
-            varname='question 1'
-        )
+        assessment = question.assessment
         data = {
-            'question 1': 'answer 1',
+            'test_question': 'answer 1',
         }
         form = ResponseForm(data=data, assessment=assessment, user=user)
 
@@ -103,3 +90,25 @@ class TestResponseForm:
         assert response.answer == 'answer 1'
         assert response.user == user
         assert response.assessment == assessment
+
+    def test_form_errors(self, question):
+        u = f.UserFactory.create()
+        data = {
+            'test_question': ''
+        }
+        form = ResponseForm(data=data, assessment=question.assessment, user=u)
+
+        assert not form.is_valid()
+        assert form.errors == [
+            {'test_question': ['This field is required.']}
+        ]
+
+    def test_form_has_error(self, question):
+        u = f.UserFactory.create()
+        data = {
+            'test_question': ''
+        }
+        form = ResponseForm(data=data, assessment=question.assessment, user=u)
+
+        assert not form.is_valid()
+        assert form.has_error()

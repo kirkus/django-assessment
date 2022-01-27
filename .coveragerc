@@ -1,0 +1,10 @@
+[run]
+omit =
+  */migrations/*
+  manage.py
+  django_assessment/settings.py
+  */django-assessment/tests/*
+  *admin.py
+
+[report]
+fail_under = 99

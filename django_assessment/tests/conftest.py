@@ -27,3 +27,16 @@ def doc_question(db):
     )
 
     return q
+
+
+@pytest.fixture
+def question(db):
+    q = f.QuestionFactory.create(
+        assessment__title='Test Assessment',
+        name='Test Question',
+        type__slug='short-text',
+        varname='test_question',
+        is_required=True
+    )
+
+    return q
