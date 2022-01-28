@@ -58,6 +58,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     first_name = "Test User"
     email = factory.Sequence(lambda n: f'test{n}@example.com')
+    username = factory.Sequence(lambda n: f'username_{n}')
     password = 'sekret'
 
 

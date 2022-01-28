@@ -13,7 +13,6 @@ class Assessment(models.Model):
         return self.title
 
     def _get_data(self, qs):
-        # TODO: Test checkbox case
         data = {}
         for resp in qs:
             answer = resp.get_answer()

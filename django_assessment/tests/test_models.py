@@ -8,6 +8,33 @@ class TestAssessment:
 
         assert str(a) == 'First Assessment'
 
+    def test_get_data_by_user(self, question):
+        a = question.assessment
+        u = f.UserFactory.create()
+        f.ResponseFactory.create(question=question, assessment=a, user=u, answer='J. Doe')
+
+        assert a.get_data_by_user(u) == {
+            'test_question': 'J. Doe'
+        }
+
+    def test_get_data_by_key(self, db):
+        option_set = f.OptionSetFactory.create()
+        for i in range(3):
+            f.OptionFactory.create(value=i, option_set=option_set)
+        q = f.QuestionFactory.create(
+            assessment__title='Test Assessment',
+            type__slug='checkbox',
+            varname='django_question',
+            option_set=option_set
+        )
+        a = q.assessment
+        key = 'my_unique_key'
+        f.ResponseFactory.create(question=q, assessment=a, key=key, answer=['1', '2'])
+
+        assert a.get_data_by_key(key) == {
+            'django_question': ['1', '2']
+        }
+
 
 class TestQuestionType:
     def test_str(self):
